@@ -135,7 +135,7 @@ public:
 	virtual void sub_180018D70() = 0;
 	virtual void _purecall_0() = 0;
 	virtual void _purecall_1() = 0;
-	virtual void sub_18000B510() = 0;
+	virtual void AddSearchPath(const char* pPath, const char* pathID, SearchPathAdd_t addType) = 0;
 	virtual void sub_180019DB0() = 0;
 	virtual void sub_180019AD0() = 0;
 	virtual void sub_18001A000() = 0;

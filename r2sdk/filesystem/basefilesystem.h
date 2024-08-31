@@ -3,6 +3,8 @@
 #include "filesystem.h"
 #include "ipackedstore.h"
 
+const std::string MOD_FILE_DIR = "ronin\\";
+
 inline CMemory p_CBaseFileSystem__ReadFileFromVPK;
 inline auto v_CBaseFileSystem__ReadFileFromVPK = p_CBaseFileSystem__ReadFileFromVPK.RCast<FileHandle_t(*)(void *self, FileHandle_t pResult, char* pszFilePath)>();
 
@@ -17,6 +19,9 @@ inline auto v_CBaseFileSystem__UnmountVPKFile = p_CBaseFileSystem__UnmountVPKFil
 
 inline CMemory p_CBaseFileSystem__GetMountedVPKHandle;
 inline auto v_CBaseFileSystem__GetMountedVPKHandle = p_CBaseFileSystem__GetMountedVPKHandle.RCast<int(*)(void* self, const char* pszVpkPath)>();
+
+inline CMemory p_CBaseFileSystem__AddSearchPath;
+inline auto v_CBaseFileSystem__AddSearchPath = p_CBaseFileSystem__AddSearchPath.RCast<void(*)(IFileSystem* self, const char* pPath, const char* pathID, SearchPathAdd_t addType)>();
 
 ///////////////////////////////////////////////////////////////////////////////
 class VBaseFileSystem : public IDetour
@@ -45,6 +50,9 @@ class VBaseFileSystem : public IDetour
 
 		p_CBaseFileSystem__GetMountedVPKHandle = g_pFSStdioDll->Offset(0x10AB0); /* "40 53 48 83 EC 20 48 8B D9 E8 F2 0C 00 00 85 C0" */
 		v_CBaseFileSystem__GetMountedVPKHandle = p_CBaseFileSystem__GetMountedVPKHandle.RCast<int(*)(void* self, const char* pszVpkPath)>();
+
+		p_CBaseFileSystem__AddSearchPath = g_pFSStdioDll->Offset(0xB510);
+		v_CBaseFileSystem__AddSearchPath = p_CBaseFileSystem__AddSearchPath.RCast<void(*)(IFileSystem * self, const char* pPath, const char* pathID, SearchPathAdd_t addType)>();
 	}
 	virtual void GetVar(void) const { }
 	virtual void GetCon(void) const { }
