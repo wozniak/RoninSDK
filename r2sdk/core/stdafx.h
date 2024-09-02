@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN // Prevent winsock2 redefinition.
 #include <windows.h>
 #include <WinSock2.h>
-#include <Ws2tcpip.h>
+#include <ws2tcpip.h>
 #include <bcrypt.h>
 #include <comdef.h>
 #include <direct.h>
