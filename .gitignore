@@ -2,3 +2,4 @@
 out
 game
 build
+CMakeUserPresets.json
