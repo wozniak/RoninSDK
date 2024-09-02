@@ -1,4 +1,6 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.11)
+
+include(FetchContent)
 
 project ("r2sdk")
 
@@ -17,7 +19,23 @@ add_subdirectory("r2sdk")
 
 set(HTTP_ONLY ON)
 set(CURL_STATICLIB ON)
+set(BUILD_CURL_EXE OFF)
+set(CURL_DISABLE_INSTALL ON)
+set(USE_LIBIDN2 OFF)
 
 add_subdirectory("thirdparty/detours")
-add_subdirectory("thirdparty/spdlog")
-add_subdirectory("thirdparty/curl")
+
+FetchContent_Declare(
+	curl
+	GIT_REPOSITORY https://github.com/curl/curl.git
+	GIT_TAG 83bedbd730d62b83744cc26fa0433d3f6e2e4cd6
+)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+
+FetchContent_Declare(
+	spdlog
+	GIT_REPOSITORY https://github.com/gabime/spdlog.git
+	GIT_TAG 27cb4c76708608465c413f6d0e6b8d99a4d84302 # 1.14.1
+)
+
+FetchContent_MakeAvailable(curl json spdlog)
