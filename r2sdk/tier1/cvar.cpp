@@ -92,7 +92,44 @@ void ConVar::StaticInit(void)
 	//-------------------------------------------------------------------------
 	// CLIENT                                                                 |
 	cl_showsdkdbg = ConVar::StaticCreate("cl_showsdkdbg", "0", FCVAR_DONTRECORD, "Show the sdk debug panel", false, 0.f, false, 0.f, nullptr);
-}
+
+	//-----------------------------------------------------------------------------
+	// RoninScripts
+	//-----------------------------------------------------------------------------
+
+	// speedometer
+	ConVar::StaticCreate("srm_enable_speedometer", "0", FCVAR_ARCHIVE_PLAYERPROFILE, "Enables Speedometer", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_unit", "0", FCVAR_ARCHIVE_PLAYERPROFILE, "Unit for Speedometer", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_axismode", "0", FCVAR_ARCHIVE_PLAYERPROFILE, "Axis Mode for Speedometer", false, 0.f, false, 0.f, nullptr);
+
+	// speedometer customization
+	ConVar::StaticCreate("srm_speedometer_position_x", "0.6", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer x Position", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_position_y", "0.48", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer y position", false, 0.f, false, 0.f, nullptr);
+
+	ConVar::StaticCreate("srm_speedometer_color_slow_r", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer slow red color", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_color_slow_g", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer slow green color", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_color_slow_b", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer slow blue color", false, 0.f, false, 0.f, nullptr);
+
+	ConVar::StaticCreate("srm_speedometer_color_fast_r", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer fast red color", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_color_fast_g", "0", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer fast green color", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_speedometer_color_fast_b", "0", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer fast blue color", false, 0.f, false, 0.f, nullptr);
+	
+	ConVar::StaticCreate("srm_speedometer_alpha", "1.0", FCVAR_ARCHIVE_PLAYERPROFILE, "Speedometer alpha", false, 0.f, false, 0.f, nullptr);
+
+	// input display
+	ConVar::StaticCreate("srm_input_display", "0", FCVAR_ARCHIVE_PLAYERPROFILE, "Enables Input Display", false, 0.f, false, 0.f, nullptr);
+
+	// input display customization
+	ConVar::StaticCreate("srm_input_display_r", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Input Display red color", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_input_display_g", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Input Display green color", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_input_display_b", "255", FCVAR_ARCHIVE_PLAYERPROFILE, "Input Display blue color", false, 0.f, false, 0.f, nullptr);
+
+	// utility
+	ConVar::StaticCreate("srm_enable_mp", "1", FCVAR_ARCHIVE_PLAYERPROFILE, "Enables Multiplayer button", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_practice_mode", "0", FCVAR_NONE, "Enables practice mode (sv_cheats 1)", false, 0.f, false, 0.f, nullptr);
+	ConVar::StaticCreate("srm_force_moonboots", "0", FCVAR_NONE, "Forces moonboots", false, 0.f, false, 0.f, nullptr);
+
+}	
 
 //-----------------------------------------------------------------------------
 // Purpose: initialize shipped ConVar's
