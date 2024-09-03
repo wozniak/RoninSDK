@@ -61,5 +61,15 @@ int APIENTRY WinMain(
 	FARPROC LauncherMain;
 	LauncherMain = GetProcAddress(hLauncher, "LauncherMain");
 
+	// Check for SRMM
+	swprintf_s(szPathBuffer, L"%s\\midimap.dll", szExePath);
+	DWORD dwAttrib = GetFileAttributesW(szPathBuffer);
+
+	if (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY)) {
+		Error("SRMM midimap.dll is present! Titanfall 2 may produce unwanted behavior. Uninstall SRMM for more stability.");
+	}
+
+
+
 	return ((int(*)(HINSTANCE, HINSTANCE, LPSTR, int))LauncherMain)(NULL, NULL, NULL, 0);
 }
