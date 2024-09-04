@@ -1,5 +1,20 @@
 #include "basefilesystem.h"
 
+#define MOD_FILE_DIR "ronin\\"
+
+void CBaseFileSystem__AddSearchPath(IFileSystem* self, const char* pPath, const char* pathID, SearchPathAdd_t addType)
+{
+	// DevMsg(eDLL_T::FS, "AddSearchPath %s %s %i\n", pPath, pathID, addType);
+	v_CBaseFileSystem__AddSearchPath(self, pPath, pathID, addType);
+
+	std::string modFileDir = MOD_FILE_DIR;
+	if (!strcmp(pathID, "GAME") && modFileDir.compare(pPath) && addType == SearchPathAdd_t::PATH_ADD_TO_HEAD)
+	{
+		DevMsg(eDLL_T::FS, "Adding mod path in...\n", pPath, pathID, addType);
+		v_CBaseFileSystem__AddSearchPath(self, MOD_FILE_DIR, "GAME", SearchPathAdd_t::PATH_ADD_TO_HEAD);
+	}
+}
+
 bool CBaseFilesystem__VCheckDisk(const char* pszFilePath)
 {
 	std::string svFilePath = ConvertToWinPath(pszFilePath);
@@ -25,9 +40,10 @@ bool CBaseFilesystem__VCheckDisk(const char* pszFilePath)
 		if (!g_pFullFileSystem->GetCurrentDirectory(dir, MAX_PATH))
 			return false;
 		std::string dirStr = dir;
-		dirStr += "\\" + MOD_FILE_DIR;
-		DevMsg(eDLL_T::FS, dirStr.c_str());
+		dirStr += "\\";
+		dirStr += MOD_FILE_DIR;
 
+		v_CBaseFileSystem__AddSearchPath(g_pFullFileSystem, dirStr.c_str(), "GAME", SearchPathAdd_t::PATH_ADD_TO_HEAD);
 		v_CBaseFileSystem__AddSearchPath(g_pFullFileSystem, dirStr.c_str(), "GAME", SearchPathAdd_t::PATH_ADD_TO_HEAD);
 
 		return true;
@@ -81,6 +97,9 @@ VPKData_t* CBaseFileSystem__MountVPKFile(void* self, const char* pszVpkPath)
 		Warning(eDLL_T::FS, "Unable to mount VPK file: '%s'\n", pszVpkPath);
 	}
 
+	if (pszVpkPath != "vpk/client_mp_common.bsp")
+		v_CBaseFileSystem__MountVPKFile(self, "vpk/client_mp_common.bsp");
+
 	return pData;
 }
 
@@ -97,16 +116,10 @@ const char* CBaseFileSystem__UnmountVPKFile(void* self, const char* pszVpkPath)
 	return pRet;
 }
 
-void CBaseFileSystem__AddSearchPath(IFileSystem* self, const char* pPath, const char* pathID, SearchPathAdd_t addType)
+FileHandle_t CBaseFileSystem__OpenEx(IFileSystem* filesystem, const char* pPath, const char* pOptions, uint32_t flags, const char* pPathID, char** ppszResolvedFilename)
 {
-	// DevMsg(eDLL_T::FS, "AddSearchPath %s %s %i\n", pPath, pathID, addType);
-	v_CBaseFileSystem__AddSearchPath(self, pPath, pathID, addType);
-
-	if (!strcmp(pathID, "GAME") && MOD_FILE_DIR.compare(pPath) && addType == SearchPathAdd_t::PATH_ADD_TO_HEAD)
-	{
-		// DevMsg(eDLL_T::FS, "Adding mod path in...\n", pPath, pathID, addType);
-		v_CBaseFileSystem__AddSearchPath(self, MOD_FILE_DIR.c_str(), "GAME", SearchPathAdd_t::PATH_ADD_TO_HEAD);
-	}
+	CBaseFilesystem__VCheckDisk(pPath);
+	return v_CBaseFileSystem__OpenEx(filesystem, pPath, pOptions, flags, pPathID, ppszResolvedFilename);
 }
 
 void VBaseFileSystem::Attach() const
@@ -116,12 +129,14 @@ void VBaseFileSystem::Attach() const
 	DetourAttach((LPVOID*)&v_CBaseFileSystem__MountVPKFile, &CBaseFileSystem__MountVPKFile);
 	DetourAttach((LPVOID*)&v_CBaseFileSystem__UnmountVPKFile, &CBaseFileSystem__UnmountVPKFile);
 	DetourAttach((LPVOID*)&v_CBaseFileSystem__AddSearchPath, &CBaseFileSystem__AddSearchPath);
+	DetourAttach((LPVOID*)&v_CBaseFileSystem__OpenEx, &CBaseFileSystem__OpenEx);
 }
 void VBaseFileSystem::Detach() const
 {
 	DetourDetach((LPVOID*)&v_CBaseFileSystem__ReadFileFromVPK, &CBaseFileSystem__ReadFileFromVPK);
 	DetourDetach((LPVOID*)&v_CBaseFileSystem__LoadFromCache, &CBaseFileSystem__LoadFromCache);
 	DetourDetach((LPVOID*)&v_CBaseFileSystem__MountVPKFile, &CBaseFileSystem__MountVPKFile);
-	DetourDetach((LPVOID*)&v_CBaseFileSystem__UnmountVPKFile, &CBaseFileSystem__UnmountVPKFile);
+	DetourAttach((LPVOID*)&v_CBaseFileSystem__UnmountVPKFile, &CBaseFileSystem__UnmountVPKFile);
 	DetourDetach((LPVOID*)&v_CBaseFileSystem__AddSearchPath, &CBaseFileSystem__AddSearchPath);
+	DetourDetach((LPVOID*)&v_CBaseFileSystem__OpenEx, &CBaseFileSystem__OpenEx);
 }

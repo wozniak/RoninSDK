@@ -23,6 +23,9 @@ inline auto v_CBaseFileSystem__GetMountedVPKHandle = p_CBaseFileSystem__GetMount
 inline CMemory p_CBaseFileSystem__AddSearchPath;
 inline auto v_CBaseFileSystem__AddSearchPath = p_CBaseFileSystem__AddSearchPath.RCast<void(*)(IFileSystem* self, const char* pPath, const char* pathID, SearchPathAdd_t addType)>();
 
+inline CMemory p_CBaseFileSystem__OpenEx;
+inline auto v_CBaseFileSystem__OpenEx = p_CBaseFileSystem__OpenEx.RCast<FileHandle_t(*)(IFileSystem * filesystem, const char* pPath, const char* pOptions, uint32_t flags, const char* pPathID, char** ppszResolvedFilename)>();
+
 ///////////////////////////////////////////////////////////////////////////////
 class VBaseFileSystem : public IDetour
 {
@@ -53,6 +56,9 @@ class VBaseFileSystem : public IDetour
 
 		p_CBaseFileSystem__AddSearchPath = g_pFSStdioDll->Offset(0xB510);
 		v_CBaseFileSystem__AddSearchPath = p_CBaseFileSystem__AddSearchPath.RCast<void(*)(IFileSystem * self, const char* pPath, const char* pathID, SearchPathAdd_t addType)>();
+
+		p_CBaseFileSystem__OpenEx = g_pFSStdioDll->Offset(0x15F50);
+		v_CBaseFileSystem__OpenEx = p_CBaseFileSystem__OpenEx.RCast<FileHandle_t(*)(IFileSystem * filesystem, const char* pPath, const char* pOptions, uint32_t flags, const char* pPathID, char** ppszResolvedFilename)>();
 	}
 	virtual void GetVar(void) const { }
 	virtual void GetCon(void) const { }
