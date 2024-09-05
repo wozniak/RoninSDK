@@ -1,7 +1,7 @@
 
 set(CMAKE_WIN32_EXECUTABLE True)
 
-add_executable(r2launcher "main.cpp")
+add_executable(r2launcher "main.cpp" "resources.rc")
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:8000000")
 
