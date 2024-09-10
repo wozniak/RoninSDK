@@ -33,11 +33,7 @@ void SpdLog_Init(void)
 	 * WINDOWS LOGGER SETUP *
 	 ************************/
 	{
-#ifdef NETCONSOLE
-		g_TermLogger = spdlog::default_logger();
-#else
 		g_TermLogger = spdlog::stdout_logger_mt("win_console");
-#endif // NETCONSOLE
 
 		// Determine if user wants ansi-color logging in the terminal.
 		g_TermLogger->set_pattern("[%H:%M:%S] %v\u001b[0m");

@@ -131,38 +131,38 @@ Color CheckForWarnings(LogType_t type, eDLL_T context, const Color& defaultCol)
 	return color;
 }
 
-Color GetColorForContext(LogType_t type, eDLL_T context)
+Color GetColorForContext(eDLL_T context)
 {
 	switch (context)
 	{
 	case eDLL_T::SCRIPT_SERVER:
-		return CheckForWarnings(type, context, Color(150, 150, 190, 255));
+		return Color(150, 150, 190, 255);
 	case eDLL_T::SCRIPT_CLIENT:
-		return CheckForWarnings(type, context, Color(150, 150, 120, 255));
+		return Color(150, 150, 120, 255);
 	case eDLL_T::SCRIPT_UI:
-		return CheckForWarnings(type, context, Color(150, 110, 120, 255));
+		return Color(150, 110, 120, 255);
 	case eDLL_T::SERVER:
-		return CheckForWarnings(type, context, Color( 60, 110, 220, 255));
+		return Color( 60, 110, 220, 255);
 	case eDLL_T::CLIENT:
-		return CheckForWarnings(type, context, Color(110, 110, 110, 255));
+		return Color(110, 110, 110, 255);
 	case eDLL_T::UI:
-		return CheckForWarnings(type, context, Color(150,  90, 110, 255));
+		return Color(150,  90, 110, 255);
 	case eDLL_T::ENGINE:
-		return CheckForWarnings(type, context, Color(190, 190, 190, 255));
+		return Color(190, 190, 190, 255);
 	case eDLL_T::FS:
-		return CheckForWarnings(type, context, Color( 90, 180, 190, 255));
+		return Color( 90, 180, 190, 255);
 	case eDLL_T::RTECH:
-		return CheckForWarnings(type, context, Color( 90, 190,  90, 255));
+		return Color( 90, 190,  90, 255);
 	case eDLL_T::MS:
-		return CheckForWarnings(type, context, Color(190,  76, 173, 255));
+		return Color(190,  76, 173, 255);
 	case eDLL_T::AUDIO:
-		return CheckForWarnings(type, context, Color(240, 110,  30, 255));
+		return Color(240, 110,  30, 255);
 	case eDLL_T::VIDEO:
-		return CheckForWarnings(type, context, Color(190,   0, 240, 255));
+		return Color(190,   0, 240, 255);
 	case eDLL_T::RONIN_GEN:
-		return CheckForWarnings(type, context, Color(  0, 255, 150, 255));
+		return Color(  0, 255, 150, 255);
 	default:
-		return CheckForWarnings(type, context, Color(210, 210, 210, 255));
+		return Color(210, 210, 210, 255);
 	}
 }
 #endif // !DEDICATED && !NETCONSOLE
@@ -170,48 +170,48 @@ Color GetColorForContext(LogType_t type, eDLL_T context)
 const char* GetContextNameByIndex(eDLL_T context)
 {
 	int index = static_cast<int>(context);
-	const char* contextName = s_DefaultAnsiColor;
+	const char* contextName = "";
 
 	switch (context)
 	{
 	case eDLL_T::SCRIPT_SERVER:
-		contextName = "[SCRIPT SV]";
+		contextName = "[SCRIPT SV] ";
 		break;
 	case eDLL_T::SCRIPT_CLIENT:
-		contextName = "[SCRIPT CL]";
+		contextName = "[SCRIPT CL] ";
 		break;
 	case eDLL_T::SCRIPT_UI:
-		contextName = "[SCRIPT UI]";
+		contextName = "[SCRIPT UI] ";
 		break;
 	case eDLL_T::SERVER:
-		contextName = "[NATIVE SV]";
+		contextName = "[NATIVE SV] ";
 		break;
 	case eDLL_T::CLIENT:
-		contextName = "[NATIVE CL]";
+		contextName = "[NATIVE CL] ";
 		break;
 	case eDLL_T::UI:
-		contextName = "[NATIVE UI]";
+		contextName = "[NATIVE UI] ";
 		break;
 	case eDLL_T::ENGINE:
-		contextName = "[NATIVE EN]";
+		contextName = "[NATIVE EN] ";
 		break;
 	case eDLL_T::FS:
-		contextName = "[FILESYSTM]";
+		contextName = "[FILESYSTM] ";
 		break;
 	case eDLL_T::RTECH:
-		contextName = "[RSPN TECH]";
+		contextName = "[RSPN TECH] ";
 		break;
 	case eDLL_T::MS:
-		contextName = "[MAT SYSTM]";
+		contextName = "[MAT SYSTM] ";
 		break;
 	case eDLL_T::AUDIO:
-		contextName = "[AUDIO SYS]";
+		contextName = "[AUDIO SYS] ";
 		break;
 	case eDLL_T::VIDEO:
-		contextName = "[VIDEO SYS]";
+		contextName = "[VIDEO SYS] ";
 		break;
 	case eDLL_T::RONIN_GEN:
-		contextName = "[RONIN GEN]";
+		contextName = "[RONIN GEN] ";
 		break;
 	default:
 		break;
@@ -250,57 +250,44 @@ void CoreMsgV(LogType_t logType, LogLevel_t logLevel, eDLL_T context,
 	const bool bToConsole = (logLevel >= LogLevel_t::LEVEL_CONSOLE);
 	const bool bUseColor = (bToConsole && g_bSpdLog_UseAnsiClr);
 
-	const char* pszUpTime = Plat_GetProcessUpTime();
+	const char* pszUpTime = context == eDLL_T::NONE ? "" : Plat_GetProcessUpTime();
 	string message = g_bSpdLog_PostInit ? pszUpTime : "";
+
+#if !defined (DEDICATED) && !defined (NETCONSOLE)
+	Color contextColor = GetColorForContext(context);
+	message.append(contextColor.ToANSIColor());
+#endif // !DEDICATED && !NETCONSOLE
 
 	const char* pszContext = GetContextNameByIndex(context);
 	message.append(pszContext);
-	message.append(" ");
 
-#if !defined (DEDICATED) && !defined (NETCONSOLE)
-	Color overlayColor = GetColorForContext(logType, context);
-#endif // !DEDICATED && !NETCONSOLE
-
-#if !defined (NETCONSOLE)
 	bool bSquirrel = false;
 	bool bWarning = false;
 	bool bError = false;
-#else
-	NOTE_UNUSED(pszLogger);
-#endif // !NETCONSOLE
 
 	//-------------------------------------------------------------------------
 	// Setup logger and context
 	//-------------------------------------------------------------------------
+	Color logColor = Color(210, 210, 210, 255);
 	switch (logType)
 	{
 	case LogType_t::LOG_WARNING:
-		if (bUseColor)
-		{
-			message.append(g_svYellowF);
-		}
+		logColor = Color(255, 255, 0, 255);
 		break;
 	case LogType_t::LOG_ERROR:
-		if (bUseColor)
-		{
-			message.append(g_svRedF);
-		}
+		logColor = Color(255, 0, 0, 255);
 		break;
-#ifndef NETCONSOLE
 	case LogType_t::SQ_INFO:
 		bSquirrel = true;
 		break;
 	case LogType_t::SQ_WARNING:
-#ifndef DEDICATED
-		overlayColor = Color(255, 255, 0, 200);
-#endif // !DEDICATED
 		bSquirrel = true;
 		bWarning = true;
 		break;
-#endif // !NETCONSOLE
 	default:
 		break;
 	}
+	message.append(logColor.ToANSIColor());
 
 	//-------------------------------------------------------------------------
 	// Format actual input
@@ -312,27 +299,6 @@ void CoreMsgV(LogType_t logType, LogLevel_t logLevel, eDLL_T context,
 		formatted[formatted.length() - 1] = '\0';
 	va_end(argsCopy);
 
-#ifndef NETCONSOLE
-	//-------------------------------------------------------------------------
-	// Colorize script warnings and errors
-	//-------------------------------------------------------------------------
-	if (bToConsole && bSquirrel)
-	{
-		// Append warning/error color before appending the formatted text,
-		// so that this gets marked as such while preserving context colors.
-		if (bError)
-		{
-			if (bUseColor)
-			{
-				message.append(g_svRedF);
-			}
-		}
-		else if (bUseColor && bWarning)
-		{
-			message.append(g_svYellowF);
-		}
-	}
-#endif // !NETCONSOLE
 	message.append(formatted);
 
 	//-------------------------------------------------------------------------
@@ -364,7 +330,9 @@ void CoreMsgV(LogType_t logType, LogLevel_t logLevel, eDLL_T context,
 
 		if (g_bSpdLog_PostInit && g_bLogToGameConsole)
 		{
-			g_pCVar->ConsoleColorPrintf(overlayColor.ToSourceColor(), "%s\n", message.c_str());
+			g_pCVar->ConsoleColorPrintf(Color(210, 210, 210, 255).ToSourceColor(), "%s", pszUpTime);
+			g_pCVar->ConsoleColorPrintf(contextColor.ToSourceColor(), "%s", pszContext);
+			g_pCVar->ConsoleColorPrintf(logColor.ToSourceColor(), "%s\n", formatted.c_str());
 		}
 #endif // !DEDICATED
 	}	

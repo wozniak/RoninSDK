@@ -90,6 +90,16 @@ public:
 		return *((int*)this);
 	}
 
+	std::string ToANSIColor()
+	{
+		std::string out = "\033[38;2;";
+		out += std::to_string(_color[0]) + ";";
+		out += std::to_string(_color[1]) + ";";
+		out += std::to_string(_color[2]) + ";";
+		out += "49m";
+		return out;
+	}
+
 	inline int r() const { return _color[0]; }
 	inline int g() const { return _color[1]; }
 	inline int b() const { return _color[2]; }
