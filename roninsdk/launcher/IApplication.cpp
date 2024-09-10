@@ -9,7 +9,7 @@
 
 int CModAppSystemGroup__Main(void* pModAppSystemGroup, void *a2)
 {
-	DevMsg(eDLL_T::NONE, "CModAppSystemGroup__Main\n");
+	DevMsg(eDLL_T::RONIN_GEN, "CModAppSystemGroup__Main");
 
 	// Get factories
 	g_pCVar = Sys_GetFactoryPtr("vstdlib.dll", CVAR_INTERFACE_VERSION).RCast<ICvar*>();
@@ -23,7 +23,7 @@ int CModAppSystemGroup__Main(void* pModAppSystemGroup, void *a2)
 
 bool CModAppSystemGroup__Create(void* pModAppSystemGroup)
 {
-	DevMsg(eDLL_T::NONE, "CModAppSystemGroup__Create\n");
+	DevMsg(eDLL_T::RONIN_GEN, "CModAppSystemGroup__Create\n");
 	return v_CModAppSystemGroup__Create(pModAppSystemGroup);
 }
 

@@ -37,21 +37,18 @@ void Console_Init()
 	HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwMode = NULL;
 	
-	if (g_svCmdLine.find("-ansicolor") != string::npos)
+	GetConsoleMode(hOutput, &dwMode);
+	dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+	if (!SetConsoleMode(hOutput, dwMode)) // Some editions of Windows have 'VirtualTerminalLevel' disabled by default.
 	{
-		GetConsoleMode(hOutput, &dwMode);
-		dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-
-		if (!SetConsoleMode(hOutput, dwMode)) // Some editions of Windows have 'VirtualTerminalLevel' disabled by default.
-		{
-			// Warn the user if 'VirtualTerminalLevel' could not be set on users environment.
-			MessageBoxA(NULL, "Failed to set console mode 'VirtualTerminalLevel'.\n"
-				"Please omit the '-ansicolor' parameter and restart \nthe program if output logging appears distorted.", "SDK Warning", MB_ICONEXCLAMATION | MB_OK);
-		}
-
-		SetConsoleBackgroundColor(0x00000000);
-		AnsiColors_Init();
+		// Warn the user if 'VirtualTerminalLevel' could not be set on users environment.
+		MessageBoxA(NULL, "Failed to set console mode 'VirtualTerminalLevel'.\n"
+			"Please omit the '-ansicolor' parameter and restart \nthe program if output logging appears distorted.", "SDK Warning", MB_ICONEXCLAMATION | MB_OK);
 	}
+
+	SetConsoleBackgroundColor(0x00000000);
+	AnsiColors_Init();
 }
 
 void Console_Shutdown()

@@ -548,7 +548,7 @@ inline uint64_t CLimitTimer::CMicroSecLeft(void) const
 	public:                                                                          \
 		~C##name##ACC()                                                              \
 		{                                                                            \
-			Msg("%-48s: %6.3f avg (%8.1f total, %7.3f peak, %5d iters)\n",           \
+			Msg("%-48s: %6.3f avg (%8.1f total, %7.3f peak, %5d iters)",           \
 				#name,                                                               \
 				GetAverageMilliseconds(),                                            \
 				GetTotalMilliseconds(),                                              \

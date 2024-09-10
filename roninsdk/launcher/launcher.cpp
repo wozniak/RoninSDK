@@ -5,20 +5,20 @@
 
 int LauncherMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	DevMsg(eDLL_T::NONE, "LauncherMain\n");
+	DevMsg(eDLL_T::RONIN_GEN, "LauncherMain");
 	return v_LauncherMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd);
 }
 
 bool CSourceAppSystemGroup__PreInit(void* pModAppSystemGroup)
 {
-	DevMsg(eDLL_T::NONE, "CSourceAppSystemGroup__PreInit\n");
+	DevMsg(eDLL_T::RONIN_GEN, "CSourceAppSystemGroup__PreInit");
 
 	// [Fifty]: r5r has a check for 'CSourceAppSystemGroup::CREATION' here
 	// i dont know how the inheritance do so i just added a defensive check
 	static bool bCalled = false;
 
 	if (bCalled)
-		Error(eDLL_T::NONE, 0xAAAAAAAA, "CSourceAppSystemGroup__PreInit called more than once!");
+		Error(eDLL_T::RONIN_GEN, 0xAAAAAAAA, "CSourceAppSystemGroup__PreInit called more than once!");
 
 	bCalled = true;
 
@@ -32,7 +32,7 @@ bool CSourceAppSystemGroup__PreInit(void* pModAppSystemGroup)
 
 bool CSourceAppSystemGroup__Create(void* pModAppSystemGroup)
 {
-	DevMsg(eDLL_T::NONE, "CSourceAppSystemGroup__Create\n");
+	DevMsg(eDLL_T::RONIN_GEN, "CSourceAppSystemGroup__Create");
 	return v_CSourceAppSystemGroup__Create(pModAppSystemGroup);
 }
 

@@ -52,10 +52,9 @@ enum class eDLL_T : int
 	//-------------------------------------------------------------------------
 	// Common enumerants
 	//-------------------------------------------------------------------------
-	COMMON = 10, // general         (No specific subsystem)
-	SYSTEM_WARNING = 11, // general warning (No specific subsystem)
-	SYSTEM_ERROR = 12, // general error   (No specific subsystem)
-	NONE = 13  // no context
+	RONIN_GEN = 10, // general         (No specific subsystem)
+	RONIN_CKF = 11,  // no context
+	NONE = 12
 };
 //-----------------------------------------------------------------------------
 enum class LogType_t
@@ -77,42 +76,32 @@ enum class LogLevel_t
 //-----------------------------------------------------------------------------
 static const char* sDLL_T[11] =
 {
-	"Native(S):",
-	"Native(C):",
-	"Native(U):",
-	"Native(E):",
-	"Native(F):",
-	"Native(R):",
-	"Native(M):",
-	"Native(A):",
-	"Native(V):",
-	"Netcon(X):",
+	"[NATIVE SV]",
+	"[NATIVE CL]",
+	"[NATIVE UI]",
+	"[NATIVE EN]",
+	"[NATIVE FS]",
+	"[RSPN TECH]",
+	"[MAT SYSTM]",
+	"[MILES SND]",
+	"[BINKVIDEO]",
+	"[NATIVE EN]",
 	""
 };
 //-----------------------------------------------------------------------------
 constexpr const char s_DefaultAnsiColor[] = "\033[38;2;255;204;153m";
-constexpr const char* s_DllAnsiColor[11] =
-{
-	"\033[38;2;059;120;218mNative(S):",
-	"\033[38;2;118;118;118mNative(C):",
-	"\033[38;2;151;090;118mNative(U):",
-	"\033[38;2;204;204;204mNative(E):",
-	"\033[38;2;097;214;214mNative(F):",
-	"\033[38;2;092;181;089mNative(R):",
-	"\033[38;2;192;077;173mNative(M):",
-	"\033[38;2;238;108;030mNative(A):",
-	"\033[38;2;185;000;235mNative(V):",
-	"\033[38;2;204;204;204mNetcon(X):",
-	s_DefaultAnsiColor
-};
-//-----------------------------------------------------------------------------
-constexpr const char* s_ScriptAnsiColor[4] =
-{
-	"\033[38;2;151;149;187mScript(S):",
-	"\033[38;2;151;149;163mScript(C):",
-	"\033[38;2;151;123;136mScript(U):",
-	"\033[38;2;151;149;163mScript(X):"
-};
+/*
+	case eDLL_T::SERVER:
+	case eDLL_T::CLIENT:
+	case eDLL_T::UI:
+	case eDLL_T::ENGINE:
+	case eDLL_T::FS:
+	case eDLL_T::RTECH:
+	case eDLL_T::MS:
+	case eDLL_T::AUDIO:
+	case eDLL_T::VIDEO:
+	case eDLL_T::RONIN_GEN:
+*/
 
 static const std::regex s_AnsiRowRegex("\\\033\\[.*?m");
 extern std::mutex g_LogMutex;
@@ -122,7 +111,7 @@ extern std::mutex g_LogMutex;
 //////////////////////////////////////////////////////////////////////////
 
 void CoreMsgV(LogType_t logType, LogLevel_t logLevel, eDLL_T context, const char* pszLogger,
-	const char* pszFormat, va_list args, const UINT exitCode = NO_ERROR, const char* pszUptimeOverride = nullptr);
+	const char* pszFormat, va_list args, const UINT exitCode = NO_ERROR);
 void CoreMsg(LogType_t logType, LogLevel_t logLevel, eDLL_T context,
 	const UINT exitCode, const char* pszLogger, const char* pszFormat, ...);
 

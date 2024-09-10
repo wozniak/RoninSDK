@@ -41,7 +41,7 @@ class VSqapi_SERVER : public IDetour
 		v_sq_newtableslot<ScriptContext::SERVER> = p_sq_newtableslot<ScriptContext::SERVER>.RCast<SQRESULT(*)(HSquirrelVM* sqvm, SQInteger idx, SQBool bStatic)>();
 
 		// PUSH FUNCS
-		p_sq_pushroottable<ScriptContext::SERVER> = g_pServerDll->Offset(0x5860);
+		p_sq_pushroottable<ScriptContext::SERVER> = g_pServerDll->Offset(0x5840);
 		p_sq_pushstring<ScriptContext::SERVER> = g_pServerDll->Offset(0x3440);
 		p_sq_pushinteger<ScriptContext::SERVER> = g_pServerDll->Offset(0x36A0);
 		p_sq_pushfloat<ScriptContext::SERVER> = g_pServerDll->Offset(0x3800);

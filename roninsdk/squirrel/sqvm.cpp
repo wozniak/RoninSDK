@@ -4,6 +4,7 @@
 #include "client/sqvm.h"
 #include "server/sqvm.h"
 #include "ui/sqvm.h"
+#include "squirrelmanager.h"
 ///////////////////////////////////////////////////////////////////////////////
 // Helper functions
 eDLL_T SQ_GetLogContext(ScriptContext nSqContext)
@@ -18,7 +19,7 @@ eDLL_T SQ_GetLogContext(ScriptContext nSqContext)
 		return eDLL_T::SCRIPT_UI;
 	}
 
-	return eDLL_T::NONE;
+	return eDLL_T::RONIN_GEN;
 }
 
 string SQ_GetContextName(ScriptContext nSqContext)
@@ -63,13 +64,22 @@ template <ScriptContext context>
 void SQVM_CompileError(HSquirrelVM* sqvm, const SQChar* pszError, const SQChar* pszFile, SQUnsignedInteger nLine, SQInteger nColumn)
 {
 	// Client and UI share some functions so we can't rely on template context
-	eDLL_T logContext = SQ_GetLogContext(SQ_GetVMContext(sqvm));
+	const ScriptContext vmContext = SQ_GetVMContext(sqvm);
+	eDLL_T logContext = SQ_GetLogContext(context);
 
 	Error(logContext, NO_ERROR, "Compile error: '%s'\n", pszError);
 	Error(logContext, NO_ERROR, "  '%s': line [%d] column [%d]\n", pszFile, nLine, nColumn);
 
 	// Retail behavior is to engine error
 	// We need to disconnect the player otherwise we AV on client compilation error
+	bool fatalCompileErrors = g_pSQManager<context>->fatalCompileErrors;
+	if (vmContext == ScriptContext::UI)
+	{
+		fatalCompileErrors = g_pSQManager<ScriptContext::UI>->fatalCompileErrors;
+	}
+	if (!fatalCompileErrors)
+		return;
+
 	Cbuf_AddText(Cbuf_GetCurrentPlayer(), "disconnect \"Compilation failure!\"", cmd_source_t::kCommandSrcCode);
 }
 

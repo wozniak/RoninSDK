@@ -21,7 +21,7 @@ CModule::CModule(const string& svModuleName)
 		return;
 
 	//if (m_pModuleBase == NULL)
-	//	Error(eDLL_T::NONE, 0xBAD0C0DE, "failed to get module handle of: '%s'\n", svModuleName.c_str());
+	//	Error(eDLL_T::RONIN_GEN, 0xBAD0C0DE, "failed to get module handle of: '%s'\n", svModuleName.c_str());
 
 	Init();
 	LoadSections();

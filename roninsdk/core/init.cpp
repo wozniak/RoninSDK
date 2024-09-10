@@ -97,7 +97,7 @@ void Systems_Init()
 	//if (hr != NO_ERROR)
 	//{
 	//	// Failed to hook into the process, terminate
-	//	Error(eDLL_T::COMMON, 0xBAD0C0DE, "Failed to detour process: error code = %08x\n", hr);
+	//	Error(eDLL_T::RONIN_GEN, 0xBAD0C0DE, "Failed to detour process: error code = %08x\n", hr);
 	//}
 
 	//initTimer.End();
@@ -165,7 +165,7 @@ void Winsock_Init()
 	int nError = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (nError != 0)
 	{
-		Error(eDLL_T::COMMON, NO_ERROR, "%s: Failed to start Winsock: (%s)\n", __FUNCTION__, NET_ErrorString(WSAGetLastError()));
+		Error(eDLL_T::RONIN_GEN, NO_ERROR, "%s: Failed to start Winsock: (%s)\n", __FUNCTION__, NET_ErrorString(WSAGetLastError()));
 	}
 	*/
 }
@@ -175,7 +175,7 @@ void Winsock_Shutdown()
 	int nError = ::WSACleanup();
 	if (nError != 0)
 	{
-		Error(eDLL_T::COMMON, NO_ERROR, "%s: Failed to stop Winsock: (%s)\n", __FUNCTION__, NET_ErrorString(WSAGetLastError()));
+		Error(eDLL_T::RONIN_GEN, NO_ERROR, "%s: Failed to stop Winsock: (%s)\n", __FUNCTION__, NET_ErrorString(WSAGetLastError()));
 	}
 	*/
 }
@@ -270,8 +270,6 @@ bool AllocateModule(string strModule)
 	SCAN_MODULE(strModule, filesystem_stdio.dll, g_pFSStdioDll);
 	SCAN_MODULE(strModule, materialsystem_dx11.dll, g_pMatSys_DX11Dll);
 
-	//DevMsg(eDLL_T::NONE, "Skipping module: %s\n", strModule.c_str());
-
 	return false;
 }
 
@@ -302,7 +300,7 @@ void DetourScanModule(string strModule)
 	}
 
 	scanTimer.End();
-	DevMsg(eDLL_T::NONE, "Scanning '%s' took '%f' seconds\n", strModule.c_str(), scanTimer.GetDuration().GetSeconds());
+	DevMsg(eDLL_T::RONIN_GEN, "Scanning '%s' took '%f' seconds", strModule.c_str(), scanTimer.GetDuration().GetSeconds());
 }
 
 void DetourAttachModule(string strModule)

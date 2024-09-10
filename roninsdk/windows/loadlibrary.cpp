@@ -28,7 +28,7 @@ HMODULE WINAPI HLoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags
 	fs::path libPath = fs::path(lpLibFileName);
 	std::string libName = libPath.filename().string();
 	REGISTER_MODULE(libName.c_str());
-	//DevMsg(eDLL_T::NONE, "HLoadLibraryExA: %s\n", libName.c_str());
+	//DevMsg(eDLL_T::RONIN_GEN, "HLoadLibraryExA: %s\n", libName.c_str());
 	return hLibrary;
 }
 
@@ -38,7 +38,7 @@ HMODULE WINAPI HLoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlag
 	fs::path libPath = fs::path(lpLibFileName);
 	std::string libName = libPath.filename().string();
 	REGISTER_MODULE(libName.c_str());
-	//DevMsg(eDLL_T::NONE, "HLoadLibraryExW: %s\n", libName.c_str());
+	//DevMsg(eDLL_T::RONIN_GEN, "HLoadLibraryExW: %s\n", libName.c_str());
 	return hLibrary;
 }
 
@@ -48,7 +48,7 @@ HMODULE WINAPI HLoadLibraryA(LPCSTR lpLibFileName)
 	fs::path libPath = fs::path(lpLibFileName);
 	std::string libName = libPath.filename().string();
 	REGISTER_MODULE(libName.c_str());
-	//DevMsg(eDLL_T::NONE, "HLoadLibraryA: %s\n", libName.c_str());
+	//DevMsg(eDLL_T::RONIN_GEN, "HLoadLibraryA: %s\n", libName.c_str());
 	return hLibrary;
 }
 
@@ -58,7 +58,7 @@ HMODULE WINAPI HLoadLibraryW(LPCWSTR lpLibFileName)
 	fs::path libPath = fs::path(lpLibFileName);
 	std::string libName = libPath.filename().string();
 	REGISTER_MODULE(libName.c_str());
-	//DevMsg(eDLL_T::NONE, "HLoadLibraryW: %s\n", libName.c_str());
+	//DevMsg(eDLL_T::RONIN_GEN, "HLoadLibraryW: %s\n", libName.c_str());
 	return hLibrary;
 }
 
@@ -80,7 +80,7 @@ void LoadLibrary_Init()
 	if (hr != NO_ERROR)
 	{
 		// Failed to hook into the process, terminate
-		Error(eDLL_T::COMMON, 0xBAD0C0DE, "Failed to detour process: error code = %08x\n", hr);
+		Error(eDLL_T::RONIN_GEN, 0xBAD0C0DE, "Failed to detour process: error code = %08x\n", hr);
 	}
 }
 

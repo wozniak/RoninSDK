@@ -339,7 +339,7 @@ void V_AppendSlash(char* pStr, size_t strSize, char separator)
 	if (len > 0 && !PATHSEPARATOR(pStr[len - 1]))
 	{
 		if (len + 1 >= strSize)
-			Error(eDLL_T::COMMON, EXIT_FAILURE, "V_AppendSlash: ran out of space on %s.", pStr);
+			Error(eDLL_T::RONIN_GEN, EXIT_FAILURE, "V_AppendSlash: ran out of space on %s.", pStr);
 
 		pStr[len] = separator;
 		pStr[len + 1] = 0;
@@ -632,7 +632,7 @@ V_MakeAbsolutePath(char* pOut, size_t outLen, const char* pPath, const char* pSt
 #pragma warning(push) // Disabled type conversion warning, as some implementations of '_getcwd' take a size_t.
 #pragma warning(disable : 4267)
 				if (!_getcwd(pOut, outLen))
-					Error(eDLL_T::COMMON, EXIT_FAILURE, "V_MakeAbsolutePath: _getcwd failed.");
+					Error(eDLL_T::RONIN_GEN, EXIT_FAILURE, "V_MakeAbsolutePath: _getcwd failed.");
 #pragma warning(pop)
 			}
 #endif
@@ -650,7 +650,7 @@ V_MakeAbsolutePath(char* pOut, size_t outLen, const char* pPath, const char* pSt
 	}
 
 	if (!V_NormalizePath(pOut, CORRECT_PATH_SEPARATOR))
-		Error(eDLL_T::COMMON, EXIT_FAILURE, "V_MakeAbsolutePath: tried to \"..\" past the root.");
+		Error(eDLL_T::RONIN_GEN, EXIT_FAILURE, "V_MakeAbsolutePath: tried to \"..\" past the root.");
 
 	V_FixSlashes(pOut);
 

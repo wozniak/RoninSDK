@@ -14,6 +14,8 @@ class VSQVM_SERVER : public IDetour
 	{
 		p_CSquirrelVM_Init<ScriptContext::SERVER> = g_pServerDll->Offset(0x260E0);
 		v_CSquirrelVM_Init<ScriptContext::SERVER> = p_CSquirrelVM_Init<ScriptContext::SERVER>.RCast<CSquirrelVM*(*)(void*, ScriptContext)>();
+		p_SQCompiler_Create<ScriptContext::SERVER> = g_pServerDll->Offset(0x8AA0);
+		v_SQCompiler_Create<ScriptContext::SERVER> = p_SQCompiler_Create<ScriptContext::SERVER>.RCast<void* (*)(HSquirrelVM * sqvm, void* a2, void* a3, SQBool bShouldThrowError)>();
 	}
 	virtual void GetVar(void) const { }
 	virtual void GetCon(void) const { }

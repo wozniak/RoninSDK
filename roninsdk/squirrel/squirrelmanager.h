@@ -51,6 +51,7 @@ public:
 
 	void ExecuteBuffer(const char* pszBuffer);
 
+	bool fatalCompileErrors = true;
 	CSquirrelVM* m_pSQVM;
 };
 
