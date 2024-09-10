@@ -26,7 +26,7 @@ void SDK_Init()
     for (size_t i = 0; i < SDK_ARRAYSIZE(R2SDK_EMBLEM); i++)
     {
         string svEscaped = StringEscape(R2SDK_EMBLEM[i]);
-        spdlog::info("{:s}{:s}{:s}\n", g_svCyanF, svEscaped, g_svReset);
+        spdlog::info("{:s}{:s}{:s}", g_svCyanF, svEscaped, g_svReset);
     }
 
     LoadLibrary_Init();
