@@ -5,7 +5,6 @@
 #include "squirrel/server/sqscript.h"
 #include "squirrel/squirrelmanager.h"
 #include "squirrel/sqinit.h"
-#include "speedrunning/modtimer.h"
 
 template <ScriptContext context>
 CSquirrelVM* CSquirrelVM_Init(void* a1, ScriptContext nSqContext)
