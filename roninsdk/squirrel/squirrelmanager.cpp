@@ -223,14 +223,11 @@ void SquirrelManager<context>::ExecuteBuffer(const char* pszBuffer)
 	SQBufferState bufferState = SQBufferState(strCode);
 
 	SQRESULT compileResult = CompileBuffer(m_pSQVM->sqvm, &bufferState, "console", -1, false);
-	DevMsg(eDLL_T::ENGINE, "CompileBuffer returned %i\n", compileResult);
 
 	if (compileResult != SQRESULT_ERROR)
 	{
-		DevMsg(eDLL_T::ENGINE, "sadge");
 		PushRootTable(m_pSQVM->sqvm);
-		DevMsg(eDLL_T::ENGINE, "pog");
 		SQRESULT callResult = Call(m_pSQVM->sqvm, 1, false, false);
-		DevMsg(eDLL_T::ENGINE, "Call returned %i", compileResult);
+		DevMsg(eDLL_T::ENGINE, "Call returned %i", callResult);
 	}
 }
