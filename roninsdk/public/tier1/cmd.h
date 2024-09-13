@@ -86,7 +86,8 @@ private:
 		COMMAND_MAX_LENGTH = 512,
 	};
 
-	int64_t m_nArgc;
+	int32_t m_nArgc;
+	int32_t padding_1;
 	int64_t m_nArgv0Size;
 	char m_pArgSBuffer[COMMAND_MAX_LENGTH];
 	char m_pArgvBuffer[COMMAND_MAX_LENGTH];

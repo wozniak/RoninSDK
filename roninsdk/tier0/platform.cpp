@@ -25,10 +25,17 @@ uint64_t Plat_MSTime()
 //-----------------------------------------------------------------------------
 const char* Plat_GetProcessUpTime()
 {
-	static char szBuf[4096];
-	sprintf_s(szBuf, sizeof(szBuf), "[%.3f] ", v_Plat_FloatTime ? Plat_FloatTime() : 0.0);
+	time_t rawtime;
+	struct tm* timeinfo;
+	char buffer[80];
 
-	return szBuf;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	strftime(buffer, sizeof(buffer), "[%H:%M:%S] ", timeinfo);
+	static std::string str(buffer);
+
+	return str.c_str();
 }
 
 //-----------------------------------------------------------------------------

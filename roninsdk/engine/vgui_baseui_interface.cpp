@@ -11,7 +11,7 @@
 char CEngineVGui__Init(void* self)
 {
 	char cResult = v_CEngineVGui__Init(self);
-	DevMsg(eDLL_T::NONE, "CEngineVGui__Init: %i\n", cResult);
+	DevMsg(eDLL_T::RONIN_GEN, "CEngineVGui__Init: %i", cResult);
 	g_pGameConsole->Initialize();
 
 	//vgui::Frame* frame = MemAllocSingleton()->Alloc<vgui::Frame>(sizeof(vgui::Frame));
@@ -41,7 +41,7 @@ void CEngineVGui__Shutdown(void* self)
 	// so that we dont try to log to it and AV
 	g_bLogToGameConsole = false;
 	v_CEngineVGui__Shutdown(self);
-	DevMsg(eDLL_T::NONE, "CEngineVGui__Shutdown\n");
+	DevMsg(eDLL_T::RONIN_GEN, "CEngineVGui__Shutdown");
 }
 
 void VEngineVgui::Attach(void) const

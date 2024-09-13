@@ -211,31 +211,23 @@ void SquirrelManager<context>::SQVMDestroyed()
 template<ScriptContext context>
 void SquirrelManager<context>::ExecuteBuffer(const char* pszBuffer)
 {
-	if (!ThreadInMainThread())
-	{
-		// TODO [Fifty]: If we get here schedule call in main
-		Error(eDLL_T::ENGINE, NO_ERROR, "Calling ExecuteBuffer from other threads not currently supported!\n");
-		return; // Only run in main thread.
-	}
-
 	if (!m_pSQVM || !m_pSQVM->sqvm)
 	{
 		Error(eDLL_T::ENGINE, NO_ERROR, "Cannot execute code, %s sqvm is not initialised!\n", SQ_GetContextName(context).c_str());
 		return;
 	}
 
-	DevMsg(eDLL_T::ENGINE, "Executing %s script code: '%s'\n", SQ_GetContextName(context).c_str(), pszBuffer);
+	DevMsg(eDLL_T::ENGINE, "Executing %s script code: '%s'", SQ_GetContextName(context).c_str(), pszBuffer);
 
 	std::string strCode(pszBuffer);
 	SQBufferState bufferState = SQBufferState(strCode);
 
 	SQRESULT compileResult = CompileBuffer(m_pSQVM->sqvm, &bufferState, "console", -1, false);
-	DevMsg(eDLL_T::ENGINE, "CompileBuffer returned %i\n", compileResult);
 
 	if (compileResult != SQRESULT_ERROR)
 	{
 		PushRootTable(m_pSQVM->sqvm);
-		SQRESULT callResult = Call(m_pSQVM->sqvm, 0, false, false);
-		DevMsg(eDLL_T::ENGINE, "Call returned %i\n", compileResult);
+		SQRESULT callResult = Call(m_pSQVM->sqvm, 1, false, false);
+		DevMsg(eDLL_T::ENGINE, "Call returned %i", callResult);
 	}
 }

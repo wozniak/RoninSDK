@@ -114,7 +114,7 @@ void HexDump(const char* szHeader, const char* szLogger, const void* pData, size
 
     // Add time stamp.
     logger->set_level(spdlog::level::trace);
-    logger->set_pattern("%v [%H:%M:%S.%f]\n");
+    logger->set_pattern("%v [%H:%M:%S.%f]");
     logger->trace("--------------------------------------------------------");
 
     // Disable EOL and create block header.

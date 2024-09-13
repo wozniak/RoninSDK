@@ -5,7 +5,7 @@
 void CGameConsoleDialog__OnCommandSubmitted(void* self, const char* pCommand)
 {
 	v_CGameConsoleDialog__OnCommandSubmitted(self, pCommand);
-	DevMsg(eDLL_T::NONE, "] %s\n", pCommand);
+	DevMsg(eDLL_T::NONE, "] %s", pCommand);
 }
 
 void VConsoleDialog::Attach(void) const

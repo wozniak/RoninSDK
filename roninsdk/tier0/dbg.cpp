@@ -119,11 +119,11 @@ bool HushAsserts()
 Color CheckForWarnings(LogType_t type, eDLL_T context, const Color& defaultCol)
 {
 	Color color = defaultCol;
-	if (type == LogType_t::LOG_WARNING || context == eDLL_T::SYSTEM_WARNING)
+	if (type == LogType_t::LOG_WARNING)
 	{
 		color = Color(255, 255,   0, 210);
 	}
-	else if (type == LogType_t::LOG_ERROR || context == eDLL_T::SYSTEM_ERROR)
+	else if (type == LogType_t::LOG_ERROR)
 	{
 		color = Color(255,   0,   0, 210);
 	}
@@ -131,84 +131,90 @@ Color CheckForWarnings(LogType_t type, eDLL_T context, const Color& defaultCol)
 	return color;
 }
 
-Color GetColorForContext(LogType_t type, eDLL_T context)
+Color GetColorForContext(eDLL_T context)
 {
 	switch (context)
 	{
 	case eDLL_T::SCRIPT_SERVER:
-		return CheckForWarnings(type, context, Color(150, 150, 190, 255));
+		return Color(150, 150, 190, 255);
 	case eDLL_T::SCRIPT_CLIENT:
-		return CheckForWarnings(type, context, Color(150, 150, 120, 255));
+		return Color(150, 150, 120, 255);
 	case eDLL_T::SCRIPT_UI:
-		return CheckForWarnings(type, context, Color(150, 110, 120, 255));
+		return Color(150, 110, 120, 255);
 	case eDLL_T::SERVER:
-		return CheckForWarnings(type, context, Color( 60, 110, 220, 255));
+		return Color( 60, 110, 220, 255);
 	case eDLL_T::CLIENT:
-		return CheckForWarnings(type, context, Color(110, 110, 110, 255));
+		return Color(110, 110, 110, 255);
 	case eDLL_T::UI:
-		return CheckForWarnings(type, context, Color(150,  90, 110, 255));
+		return Color(150,  90, 110, 255);
 	case eDLL_T::ENGINE:
-		return CheckForWarnings(type, context, Color(190, 190, 190, 255));
+		return Color(190, 190, 190, 255);
 	case eDLL_T::FS:
-		return CheckForWarnings(type, context, Color( 90, 180, 190, 255));
+		return Color( 90, 180, 190, 255);
 	case eDLL_T::RTECH:
-		return CheckForWarnings(type, context, Color( 90, 190,  90, 255));
+		return Color( 90, 190,  90, 255);
 	case eDLL_T::MS:
-		return CheckForWarnings(type, context, Color(190,  76, 173, 255));
+		return Color(190,  76, 173, 255);
 	case eDLL_T::AUDIO:
-		return CheckForWarnings(type, context, Color(240, 110,  30, 255));
+		return Color(240, 110,  30, 255);
 	case eDLL_T::VIDEO:
-		return CheckForWarnings(type, context, Color(190,   0, 240, 255));
-	case eDLL_T::NETCON:
-		return CheckForWarnings(type, context, Color(210, 210, 210, 255));
-	case eDLL_T::COMMON:
-		return CheckForWarnings(type, context, Color(255, 200, 150, 255));
+		return Color(190,   0, 240, 255);
+	case eDLL_T::RONIN_GEN:
+		return Color(  0, 255, 150, 255);
 	default:
-		return CheckForWarnings(type, context, Color(210, 210, 210, 255));
+		return Color(210, 210, 210, 255);
 	}
 }
 #endif // !DEDICATED && !NETCONSOLE
 
-const char* GetContextNameByIndex(eDLL_T context, const bool ansiColor = false)
+const char* GetContextNameByIndex(eDLL_T context)
 {
 	int index = static_cast<int>(context);
-	const char* contextName = s_DefaultAnsiColor;
+	const char* contextName = "";
 
 	switch (context)
 	{
 	case eDLL_T::SCRIPT_SERVER:
-		contextName = s_ScriptAnsiColor[0];
+		contextName = "[SCRIPT SV] ";
 		break;
 	case eDLL_T::SCRIPT_CLIENT:
-		contextName = s_ScriptAnsiColor[1];
+		contextName = "[SCRIPT CL] ";
 		break;
 	case eDLL_T::SCRIPT_UI:
-		contextName = s_ScriptAnsiColor[2];
+		contextName = "[SCRIPT UI] ";
 		break;
 	case eDLL_T::SERVER:
-	case eDLL_T::CLIENT:
-	case eDLL_T::UI:
-	case eDLL_T::ENGINE:
-	case eDLL_T::FS:
-	case eDLL_T::RTECH:
-	case eDLL_T::MS:
-	case eDLL_T::AUDIO:
-	case eDLL_T::VIDEO:
-	case eDLL_T::NETCON:
-	case eDLL_T::COMMON:
-		contextName = s_DllAnsiColor[index];
+		contextName = "[NATIVE SV] ";
 		break;
-	case eDLL_T::SYSTEM_WARNING:
-	case eDLL_T::SYSTEM_ERROR:
-	case eDLL_T::NONE:
+	case eDLL_T::CLIENT:
+		contextName = "[NATIVE CL] ";
+		break;
+	case eDLL_T::UI:
+		contextName = "[NATIVE UI] ";
+		break;
+	case eDLL_T::ENGINE:
+		contextName = "[NATIVE EN] ";
+		break;
+	case eDLL_T::FS:
+		contextName = "[FILESYSTM] ";
+		break;
+	case eDLL_T::RTECH:
+		contextName = "[RSPN TECH] ";
+		break;
+	case eDLL_T::MS:
+		contextName = "[MAT SYSTM] ";
+		break;
+	case eDLL_T::AUDIO:
+		contextName = "[AUDIO SYS] ";
+		break;
+	case eDLL_T::VIDEO:
+		contextName = "[VIDEO SYS] ";
+		break;
+	case eDLL_T::RONIN_GEN:
+		contextName = "[RONIN GEN] ";
+		break;
 	default:
 		break;
-	}
-
-	if (!ansiColor)
-	{
-		// Shift # chars to skip ANSI row.
-		contextName += sizeof(s_DefaultAnsiColor) - 1;
 	}
 
 	return contextName;
@@ -239,122 +245,60 @@ bool LoggedFromClient(eDLL_T context)
 //-----------------------------------------------------------------------------
 void CoreMsgV(LogType_t logType, LogLevel_t logLevel, eDLL_T context,
 	const char* pszLogger, const char* pszFormat, va_list args,
-	const UINT exitCode /*= NO_ERROR*/, const char* pszUptimeOverride /*= nullptr*/)
+	const UINT exitCode)
 {
 	const bool bToConsole = (logLevel >= LogLevel_t::LEVEL_CONSOLE);
 	const bool bUseColor = (bToConsole && g_bSpdLog_UseAnsiClr);
 
-	const char* pszUpTime = pszUptimeOverride ? pszUptimeOverride : Plat_GetProcessUpTime();
+	const char* pszUpTime = context == eDLL_T::NONE ? "" : Plat_GetProcessUpTime();
 	string message = g_bSpdLog_PostInit ? pszUpTime : "";
 
-	const char* pszContext = GetContextNameByIndex(context, bUseColor);
-	message.append(pszContext);
-
 #if !defined (DEDICATED) && !defined (NETCONSOLE)
-	Color overlayColor = GetColorForContext(logType, context);
-	eDLL_T overlayContext = context;
+	Color contextColor = GetColorForContext(context);
+	message.append(contextColor.ToANSIColor());
 #endif // !DEDICATED && !NETCONSOLE
 
-#if !defined (NETCONSOLE)
+	const char* pszContext = GetContextNameByIndex(context);
+	message.append(pszContext);
+
 	bool bSquirrel = false;
 	bool bWarning = false;
 	bool bError = false;
-#else
-	NOTE_UNUSED(pszLogger);
-#endif // !NETCONSOLE
 
 	//-------------------------------------------------------------------------
 	// Setup logger and context
 	//-------------------------------------------------------------------------
+	Color logColor = Color(210, 210, 210, 255);
 	switch (logType)
 	{
 	case LogType_t::LOG_WARNING:
-#if !defined (DEDICATED) && !defined (NETCONSOLE)
-		overlayContext = eDLL_T::SYSTEM_WARNING;
-#endif // !DEDICATED && !NETCONSOLE
-		if (bUseColor)
-		{
-			message.append(g_svYellowF);
-		}
+		logColor = Color(255, 255, 0, 255);
 		break;
 	case LogType_t::LOG_ERROR:
-#if !defined (DEDICATED) && !defined (NETCONSOLE) && 0
-		overlayContext = eDLL_T::SYSTEM_ERROR;
-#endif // !DEDICATED && !NETCONSOLE
-		if (bUseColor)
-		{
-			message.append(g_svRedF);
-		}
+		logColor = Color(255, 0, 0, 255);
 		break;
-#ifndef NETCONSOLE
 	case LogType_t::SQ_INFO:
 		bSquirrel = true;
 		break;
 	case LogType_t::SQ_WARNING:
-#ifndef DEDICATED
-		overlayContext = eDLL_T::SYSTEM_WARNING;
-		overlayColor = Color(255, 255, 0, 200);
-#endif // !DEDICATED
 		bSquirrel = true;
 		bWarning = true;
 		break;
-#endif // !NETCONSOLE
 	default:
 		break;
 	}
+	message.append(logColor.ToANSIColor());
 
 	//-------------------------------------------------------------------------
 	// Format actual input
 	//-------------------------------------------------------------------------
 	va_list argsCopy;
 	va_copy(argsCopy, args);
-	const string formatted = FormatV(pszFormat, argsCopy);
+	string formatted = FormatV(pszFormat, argsCopy);
+	if (formatted[formatted.length() - 1] == '\n')
+		formatted[formatted.length() - 1] = '\0';
 	va_end(argsCopy);
 
-#ifndef NETCONSOLE
-	//-------------------------------------------------------------------------
-	// Colorize script warnings and errors
-	//-------------------------------------------------------------------------
-	if (bToConsole && bSquirrel)
-	{
-#if 0
-		if (bWarning && g_bSQAuxError)
-		{
-			if (formatted.find("SCRIPT ERROR:") != string::npos ||
-				formatted.find(" -> ") != string::npos)
-			{
-				bError = true;
-			}
-		}
-		else if (g_bSQAuxBadLogic)
-		{
-			if (formatted.find("There was a problem processing game logic.") != string::npos)
-			{
-				bError = true;
-				g_bSQAuxBadLogic = false;
-			}
-		}
-#endif
-		// Append warning/error color before appending the formatted text,
-		// so that this gets marked as such while preserving context colors.
-		if (bError)
-		{
-#ifndef DEDICATED
-			overlayContext = eDLL_T::SYSTEM_ERROR;
-			overlayColor = Color(255, 0, 0, 200);
-#endif // !DEDICATED
-
-			if (bUseColor)
-			{
-				message.append(g_svRedF);
-			}
-		}
-		else if (bUseColor && bWarning)
-		{
-			message.append(g_svYellowF);
-		}
-	}
-#endif // !NETCONSOLE
 	message.append(formatted);
 
 	//-------------------------------------------------------------------------
@@ -375,35 +319,23 @@ void CoreMsgV(LogType_t logType, LogLevel_t logLevel, eDLL_T context,
 #ifndef NETCONSOLE
 
 	// Output is always logged to the file.
-	std::shared_ptr<spdlog::logger> ntlogger = spdlog::get(pszLogger); // <-- Obtain by 'pszLogger'.
+	std::shared_ptr<spdlog::logger> ntlogger = spdlog::get("log"); // <-- Obtain by 'pszLogger'.
 	assert(ntlogger.get() != nullptr);
 	ntlogger->debug(message);
 
 	if (bToConsole)
 	{
-#ifndef CLIENT_DLL
-#if 0 // RCON
-		if (!LoggedFromClient(context) && RCONServer()->ShouldSend(sv_rcon::response_t::SERVERDATA_RESPONSE_CONSOLE_LOG))
-		{
-			RCONServer()->SendEncode(formatted.c_str(), pszUpTime, sv_rcon::response_t::SERVERDATA_RESPONSE_CONSOLE_LOG,
-				int(context), int(logType));
-		}
-#endif
-#endif // !CLIENT_DLL
 #ifndef DEDICATED
 		g_GameLogger->debug(message);
 
 		if (g_bSpdLog_PostInit && g_bLogToGameConsole)
 		{
-			g_pCVar->ConsoleColorPrintf(overlayColor.ToSourceColor(), "%s", message.c_str());
-
-			//if (logLevel >= LogLevel_t::LEVEL_NOTIFY) // Draw to mini console.
-			//{
-			//	g_pOverlay->AddLog(overlayContext, g_LogStream.str());
-			//}
+			g_pCVar->ConsoleColorPrintf(Color(210, 210, 210, 255).ToSourceColor(), "%s", pszUpTime);
+			g_pCVar->ConsoleColorPrintf(contextColor.ToSourceColor(), "%s", pszContext);
+			g_pCVar->ConsoleColorPrintf(logColor.ToSourceColor(), "%s\n", formatted.c_str());
 		}
 #endif // !DEDICATED
-	}
+	}	
 
 #ifndef DEDICATED
 	g_LogStream.str(string());
@@ -464,7 +396,7 @@ void NetMsg(LogType_t logType, eDLL_T context, const char* uptime, const char* f
 {
 	va_list args;
 	va_start(args, fmt);
-	CoreMsgV(logType, LogLevel_t::LEVEL_NOTIFY, context, "netconsole", fmt, args, NO_ERROR, uptime);
+	CoreMsgV(logType, LogLevel_t::LEVEL_NOTIFY, context, "netconsole", fmt, args, NO_ERROR);
 	va_end(args);
 }
 #endif // !DEDICATED
